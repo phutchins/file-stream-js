@@ -17,11 +17,8 @@ FileStream.prototype._read = function (size) {
     var chunkBlob = self.content.slice(0, size);
 
 		blobToBuffer(chunkBlob, function (err, chunkBuffer) {
-      debugger;
 			self.push(chunkBuffer);
 			self.content = self.content.slice(size);
-      debugger;
-      console.log('self.content.length: %s', self.content.length());
     });
   }
 };
