@@ -1,9 +1,10 @@
 const Readable = require('stream').Readable;
 const inherits = require('util').inherits;
 
-function FileStream(content, options) {
+function FileStream(options) {
+  if (!(this instanceof FileStream))
+    return new FileStream(options);
   Readable.call(this, options);
-  this.content = content;
 }
 
 inherits(FileStream, Readable);
