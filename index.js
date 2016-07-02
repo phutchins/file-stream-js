@@ -20,17 +20,22 @@ FileStream.prototype._read = function (size) {
   var self = this;
   console.log('File-Stream got _read, size: %s', size);
 
-  if (!this.content) {
+  if (!this.content.length) {
     console.log('End of data through file-stream');
     this.push(null);
   } else {
     console.log('Sending data through file-stream');
-    var chunkBlob = this.content.slice(0, size);
 
-		blobToBuffer(chunkBlob, function (err, chunkBuffer) {
+    var chunkBlob = this.content.slice(0, size);
+	  self.content = self.content.slice(size);
+
+		//blobToBuffer(chunkBlob, function (err, chunkBuffer) {
+		blobToBuffer(chunkBlob, function(err, chunkBuffer) {
 			self.push(chunkBuffer);
-			self.content = self.content.slice(size);
     });
+
+   //this.push(this.content.slice(0, size));
+   //this.content = this.content.slice(size);
   }
 };
 
