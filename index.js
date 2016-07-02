@@ -1,32 +1,31 @@
 const Readable = require('stream').Readable;
 const inherits = require('util').inherits;
 
-function FileStream(options) {
+// Options by itself makes the events work but
+// when it's content, options, the content works but doesn't do eents
+function FileStream(content, options) {
   if (!(this instanceof FileStream))
-    return new FileStream(options);
+    return new FileStream(content, options);
+
+  console.log('FileStream Content: ', content, 'Options: ', options);
+
   Readable.call(this, options);
+
+  this.content = content;
 }
 
 inherits(FileStream, Readable);
 
 FileStream.prototype._read = function (size) {
   var self = this;
+  console.log('File-Stream got _read, size: %s', size);
 
-  console.log('File-Stream got _read, size: %s this.curIndex: %s  ', size, this.curIndex);
-
-  if (this.counter-- === 0) {
-    console.log('END OF DATA STREAM');
-  }
-
-  if (!self.content) {
-    // ******************
-    // The problem is that this is never getting called!
-    // ******************
+  if (!this.content) {
     console.log('End of data through file-stream');
-    self.push(null);
+    this.push(null);
   } else {
     console.log('Sending data through file-stream');
-    var chunkBlob = self.content.slice(0, size);
+    var chunkBlob = this.content.slice(0, size);
 
 		blobToBuffer(chunkBlob, function (err, chunkBuffer) {
 			self.push(chunkBuffer);
