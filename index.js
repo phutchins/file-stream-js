@@ -7,27 +7,28 @@ function FileStream(content, options) {
   if (!(this instanceof FileStream))
     return new FileStream(content, options);
 
-  console.log('FileStream Content: ', content, 'Options: ', options);
-
-  Readable.call(this, options);
+  console.log('[CONSTRUCTOR] FileStream Content: ', content, 'Options: ', options);
 
   this.content = content;
+  Readable.call(this, options);
 }
 
 inherits(FileStream, Readable);
 
 FileStream.prototype._read = function (size) {
   var self = this;
-  console.log('File-Stream got _read, size: %s', size);
+  console.log('[FileStream][_read] File-Stream got _read, size: ', this.content.size, 'Content is: ', this.content);
 
-  if (!this.content.length) {
-    console.log('End of data through file-stream');
-    this.push(null);
+  if (this.content.size === 0) {
+    console.log('[FileStream][_read] End of data through file-stream');
+    return this.push(null);
   } else {
-    console.log('Sending data through file-stream');
+    console.log('[FileStream][_read] Sending data through file-stream');
 
     var chunkBlob = this.content.slice(0, size);
-	  self.content = self.content.slice(size);
+	  this.content = this.content.slice(size);
+
+    console.log('[FileStream][_read] this.content: ', this.content);
 
 		//blobToBuffer(chunkBlob, function (err, chunkBuffer) {
 		blobToBuffer(chunkBlob, function(err, chunkBuffer) {
@@ -51,8 +52,16 @@ function blobToBuffer (blob, cb) {
 
   function onLoadEnd (e) {
     reader.removeEventListener('loadend', onLoadEnd, false);
-    if (e.error) cb(e.error);
-    else cb(null, new Buffer(reader.result));
+
+    if (e.error) {
+      cb(e.error);
+    } else {
+      var readerString = String.fromCharCode.apply(null, new Uint8Array(reader.result));
+
+      console.log('[FileStream][blobToBuffer] FileReader read chunk from file: %s', readerString);
+
+      cb(null, new Buffer(reader.result));
+    }
   }
 
   reader.addEventListener('loadend', onLoadEnd, false);
