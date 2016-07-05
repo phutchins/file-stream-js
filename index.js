@@ -3,32 +3,32 @@ const inherits = require('util').inherits;
 
 // Options by itself makes the events work but
 // when it's content, options, the content works but doesn't do eents
-function FileStream(content, options) {
-  if (!(this instanceof FileStream))
-    return new FileStream(content, options);
+function FlipStream(content, options) {
+  if (!(this instanceof FlipStream))
+    return new FlipStream(content, options);
 
-  console.log('[CONSTRUCTOR] FileStream Content: ', content, 'Options: ', options);
+  console.log('[CONSTRUCTOR] FlipStream Content: ', content, 'Options: ', options);
 
   this.content = content;
   Readable.call(this, options);
 }
 
-inherits(FileStream, Readable);
+inherits(FlipStream, Readable);
 
-FileStream.prototype._read = function (size) {
+FlipStream.prototype._read = function (size) {
   var self = this;
-  console.log('[FileStream][_read] File-Stream got _read, size: ', this.content.size, 'Content is: ', this.content);
+  console.log('[FlipStream][_read] File-Stream got _read, size: ', this.content.size, 'Content is: ', this.content);
 
   if (this.content.size === 0) {
-    console.log('[FileStream][_read] End of data through file-stream');
+    console.log('[FlipStream][_read] End of data through file-stream');
     return this.push(null);
   } else {
-    console.log('[FileStream][_read] Sending data through file-stream');
+    console.log('[FlipStream][_read] Sending data through file-stream');
 
     var chunkBlob = this.content.slice(0, size);
 	  this.content = this.content.slice(size);
 
-    console.log('[FileStream][_read] this.content: ', this.content);
+    console.log('[FlipStream][_read] this.content: ', this.content);
 
 		//blobToBuffer(chunkBlob, function (err, chunkBuffer) {
 		blobToBuffer(chunkBlob, function(err, chunkBuffer) {
@@ -58,7 +58,7 @@ function blobToBuffer (blob, cb) {
     } else {
       var readerString = String.fromCharCode.apply(null, new Uint8Array(reader.result));
 
-      console.log('[FileStream][blobToBuffer] FileReader read chunk from file: %s', readerString);
+      console.log('[FlipStream][blobToBuffer] FileReader read chunk from file: %s', readerString);
 
       cb(null, new Buffer(reader.result));
     }
@@ -68,4 +68,4 @@ function blobToBuffer (blob, cb) {
   reader.readAsArrayBuffer(blob);
 }
 
-module.exports = FileStream;
+module.exports = FlipStream;

@@ -1,11 +1,11 @@
 {
-  "name": "file-stream",
-  "version": "0.1.0",
-  "description": "streaming for browser file object",
+  "name": "flip-stream-js",
+  "version": "0.1.1",
+  "description": "Streaming for browser file object",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Philip Hutchins",
-  "license": "ISC"
+  "license": "AGPLv3"
 }
