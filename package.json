@@ -1,6 +1,6 @@
 {
   "name": "flip-stream-js",
-  "version": "0.1.4",
+  "version": "0.1.6",
   "description": "Streaming for browser file object",
   "main": "index.js",
   "scripts": {
